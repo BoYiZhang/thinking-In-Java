@@ -76,7 +76,9 @@ public class OrnamentalGarden {
     print("Total: " + Entrance.getTotalCount());
     print("Sum of Entrances: " + Entrance.sumEntrances());
   }
-} /* Output: (Sample)
+}
+
+/* Output: (Sample)
 Entrance 0: 1 Total: 1
 Entrance 2: 1 Total: 3
 Entrance 1: 1 Total: 2

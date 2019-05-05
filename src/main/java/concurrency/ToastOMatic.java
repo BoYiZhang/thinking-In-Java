@@ -128,7 +128,7 @@ public class ToastOMatic {
     exec.execute(new Butterer(dryQueue, butteredQueue));
     exec.execute(new Jammer(butteredQueue, finishedQueue));
     exec.execute(new Eater(finishedQueue));
-    TimeUnit.SECONDS.sleep(5);
+    TimeUnit.SECONDS.sleep(2);
     exec.shutdownNow();
   }
 } /* (Execute to see output) *///:~

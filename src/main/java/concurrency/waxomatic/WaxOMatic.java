@@ -32,8 +32,8 @@ class WaxOn implements Runnable {
   public void run() {
     try {
       while(!Thread.interrupted()) {
-        printnb("Wax On! ");
-        TimeUnit.MILLISECONDS.sleep(200);
+        printnb("抛光   Wax On! ");
+        TimeUnit.MILLISECONDS.sleep(500);
         car.waxed();
         car.waitForBuffing();
       }
@@ -51,8 +51,8 @@ class WaxOff implements Runnable {
     try {
       while(!Thread.interrupted()) {
         car.waitForWaxing();
-        printnb("Wax Off! ");
-        TimeUnit.MILLISECONDS.sleep(200);
+        printnb("打蜡   Wax Off! ");
+        TimeUnit.MILLISECONDS.sleep(500);
         car.buffed();
       }
     } catch(InterruptedException e) {
@@ -71,7 +71,8 @@ public class WaxOMatic {
     TimeUnit.SECONDS.sleep(5); // Run for a while...
     exec.shutdownNow(); // Interrupt all tasks
   }
-} /* Output: (95% match)
+}
+/* Output: (95% match)
 Wax On! Wax Off! Wax On! Wax Off! Wax On! Wax Off! Wax On! Wax Off! Wax On! Wax Off! Wax On! Wax Off! Wax On! Wax Off! Wax On! Wax Off! Wax On! Wax Off! Wax On! Wax Off! Wax On! Wax Off! Wax On! Wax Off! Wax On! Exiting via interrupt
 Ending Wax On task
 Exiting via interrupt

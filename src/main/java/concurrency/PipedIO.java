@@ -14,6 +14,7 @@ class Sender implements Runnable {
     try {
       while(true)
         for(char c = 'A'; c <= 'z'; c++) {
+          printnb("Sender: " + c + ", ");
           out.write(c);
           TimeUnit.MILLISECONDS.sleep(rand.nextInt(500));
         }

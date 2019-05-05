@@ -17,7 +17,7 @@ class NeedsCleanup {
 }
 
 class Blocked3 implements Runnable {
-  private volatile double d = 0.0;
+  private volatile double d = 1.0;
   public void run() {
     try {
       while(!Thread.interrupted()) {
@@ -36,6 +36,7 @@ class Blocked3 implements Runnable {
             // A time-consuming, non-blocking operation:
             for(int i = 1; i < 2500000; i++)
               d = d + (Math.PI + Math.E) / d;
+            System.out.println("d: " + d);
             print("Finished time-consuming operation");
           } finally {
             n2.cleanup();
@@ -62,7 +63,9 @@ public class InterruptingIdiom {
     TimeUnit.MILLISECONDS.sleep(new Integer(args[0]));
     t.interrupt();
   }
-} /* Output: (Sample)
+}
+
+/* Output: (Sample)
 NeedsCleanup 1
 Sleeping
 NeedsCleanup 2

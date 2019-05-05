@@ -15,7 +15,7 @@ public class Print {
   }
   // Print with no line break:
   public static void printnb(Object obj) {
-    System.out.print(obj);
+    System.out.println(obj);
   }
   // The new Java SE5 printf() (from C):
   public static PrintStream
