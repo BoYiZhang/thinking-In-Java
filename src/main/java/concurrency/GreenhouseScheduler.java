@@ -18,14 +18,16 @@ public class GreenhouseScheduler {
   }
   ScheduledThreadPoolExecutor scheduler =
     new ScheduledThreadPoolExecutor(10);
+
   public void schedule(Runnable event, long delay) {
     scheduler.schedule(event,delay,TimeUnit.MILLISECONDS);
   }
-  public void
-  repeat(Runnable event, long initialDelay, long period) {
+
+  public void  repeat(Runnable event, long initialDelay, long period) {
     scheduler.scheduleAtFixedRate(
       event, initialDelay, period, TimeUnit.MILLISECONDS);
   }
+
   class LightOn implements Runnable {
     public void run() {
       // Put hardware control code here to
@@ -34,6 +36,7 @@ public class GreenhouseScheduler {
       light = true;
     }
   }
+
   class LightOff implements Runnable {
     public void run() {
       // Put hardware control code here to
@@ -42,12 +45,14 @@ public class GreenhouseScheduler {
       light = false;
     }
   }
+
   class WaterOn implements Runnable {
     public void run() {
       // Put hardware control code here.
       System.out.println("Turning greenhouse water on");
       water = true;
     }
+
   }
   class WaterOff implements Runnable {
     public void run() {
@@ -56,6 +61,8 @@ public class GreenhouseScheduler {
       water = false;
     }
   }
+
+
   class ThermostatNight implements Runnable {
     public void run() {
       // Put hardware control code here.
@@ -63,6 +70,7 @@ public class GreenhouseScheduler {
       setThermostat("Night");
     }
   }
+
   class ThermostatDay implements Runnable {
     public void run() {
       // Put hardware control code here.
@@ -70,9 +78,12 @@ public class GreenhouseScheduler {
       setThermostat("Day");
     }
   }
+
+
   class Bell implements Runnable {
     public void run() { System.out.println("Bing!"); }
   }
+
   class Terminate implements Runnable {
     public void run() {
       System.out.println("Terminating");
@@ -87,6 +98,7 @@ public class GreenhouseScheduler {
       }.start();
     }
   }
+
   // New feature: data collection
   static class DataPoint {
     final Calendar time;
@@ -104,6 +116,8 @@ public class GreenhouseScheduler {
           temperature, humidity);
     }
   }
+
+
   private Calendar lastTime = Calendar.getInstance();
   { // Adjust date to the half hour
     lastTime.set(Calendar.MINUTE, 30);
@@ -114,8 +128,9 @@ public class GreenhouseScheduler {
   private float lastHumidity = 50.0f;
   private int humidityDirection = +1;
   private Random rand = new Random(47);
-  List<DataPoint> data = Collections.synchronizedList(
-    new ArrayList<DataPoint>());
+
+  List<DataPoint> data = Collections.synchronizedList(  new ArrayList<DataPoint>());
+
   class CollectData implements Runnable {
     public void run() {
       System.out.println("Collecting data");

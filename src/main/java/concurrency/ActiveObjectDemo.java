@@ -45,8 +45,7 @@ public class ActiveObjectDemo {
   public static void main(String[] args) {
     ActiveObjectDemo d1 = new ActiveObjectDemo();
     // Prevents ConcurrentModificationException:
-    List<Future<?>> results =
-      new CopyOnWriteArrayList<Future<?>>();
+    List<Future<?>> results = new CopyOnWriteArrayList<Future<?>>();
     for(float f = 0.0f; f < 1.0f; f += 0.2f)
       results.add(d1.calculateFloat(f, f));
     for(int i = 0; i < 5; i++)

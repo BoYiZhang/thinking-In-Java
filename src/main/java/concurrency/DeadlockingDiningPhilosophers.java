@@ -6,7 +6,7 @@ import java.util.concurrent.*;
 
 public class DeadlockingDiningPhilosophers {
   public static void main(String[] args) throws Exception {
-    int ponder = 5;
+    int ponder = 0;
     if(args.length > 0)
       ponder = Integer.parseInt(args[0]);
     int size = 5;

@@ -8,8 +8,8 @@ import static net.mindview.util.Print.*;
 public class ReaderWriterList<T> {
   private ArrayList<T> lockedList;
   // Make the ordering fair:
-  private ReentrantReadWriteLock lock =
-    new ReentrantReadWriteLock(true);
+  private ReentrantReadWriteLock lock = new ReentrantReadWriteLock(false);
+
   public ReaderWriterList(int size, T initialValue) {
     lockedList = new ArrayList<T>(
       Collections.nCopies(size, initialValue));
@@ -41,12 +41,15 @@ public class ReaderWriterList<T> {
   }
 }
 
+
+
 class ReaderWriterListTest {
   ExecutorService exec = Executors.newCachedThreadPool();
   private final static int SIZE = 100;
   private static Random rand = new Random(47);
-  private ReaderWriterList<Integer> list =
-    new ReaderWriterList<Integer>(SIZE, 0);
+  private ReaderWriterList<Integer> list = new ReaderWriterList<Integer>(SIZE, 0);
+
+
   private class Writer implements Runnable {
     public void run() {
       try {

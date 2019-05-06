@@ -142,8 +142,7 @@ class Restaurant implements Runnable {
   private List<Chef> chefs = new ArrayList<Chef>();
   private ExecutorService exec;
   private static Random rand = new Random(47);
-  BlockingQueue<Order>
-    orders = new LinkedBlockingQueue<Order>();
+  BlockingQueue<Order> orders = new LinkedBlockingQueue<Order>();
   public Restaurant(ExecutorService e, int nWaitPersons,
     int nChefs) {
     exec = e;

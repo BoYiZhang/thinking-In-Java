@@ -67,8 +67,8 @@ abstract class Accumulator {
     duration = System.nanoTime() - start;
     printf("%-13s: %13d\n", id, duration);
   }
-  public static void
-  report(Accumulator acc1, Accumulator acc2) {
+
+  public static void report(Accumulator acc1, Accumulator acc2) {
     printf("%-22s: %.2f\n", acc1.id + "/" + acc2.id,
       (double)acc1.duration/(double)acc2.duration);
   }
@@ -77,8 +77,11 @@ abstract class Accumulator {
 class BaseLine extends Accumulator {
   { id = "BaseLine"; }
   public void accumulate() {
-    value += preLoaded[index++];
-    if(index >= SIZE) index = 0;
+    if( index < SIZE-1){
+      value += preLoaded[index++];
+      if(index >= SIZE) index = 0;
+    }
+
   }
   public long read() { return value; }
 }
@@ -125,9 +128,14 @@ class AtomicTest extends Accumulator {
     // a time doesn't work. But it still gives us
     // a performance indicator:
     int i = index.getAndIncrement();
-    value.getAndAdd(preLoaded[i]);
-    if(++i >= SIZE)
-      index.set(0);
+
+    if( index.get() < SIZE){
+
+      value.getAndAdd(preLoaded[i]);
+      if(++i >= SIZE)
+        index.set(0);
+    }
+
   }
   public long read() { return value.get(); }
 }
@@ -152,7 +160,7 @@ public class SynchronizationComparisons {
     Accumulator.report(lock, atomic);
   }
   public static void main(String[] args) {
-    int iterations = 5; // Default
+    int iterations = 8; // Default
     if(args.length > 0) // Optionally change iterations
       iterations = new Integer(args[0]);
     // The first time fills the thread pool:
@@ -167,91 +175,106 @@ public class SynchronizationComparisons {
     }
     Accumulator.exec.shutdown();
   }
-} /* Output: (Sample)
+}
+
+/*
+Connected to the target VM, address: '127.0.0.1:62371', transport: 'socket'
 Warmup
-BaseLine     :      34237033
+BaseLine     :      21694209
 ============================
 Cycles       :         50000
-BaseLine     :      20966632
-synchronized :      24326555
-Lock         :      53669950
-Atomic       :      30552487
-synchronized/BaseLine : 1.16
-Lock/BaseLine         : 2.56
-Atomic/BaseLine       : 1.46
-synchronized/Lock     : 0.45
-synchronized/Atomic   : 0.79
-Lock/Atomic           : 1.76
+BaseLine     :       2180204
+synchronized :      42437398
+Lock         :      30372376
+Atomic       :      26275467
+synchronized/BaseLine : 19.46
+Lock/BaseLine         : 13.93
+Atomic/BaseLine       : 12.05
+synchronized/Lock     : 1.40
+synchronized/Atomic   : 1.62
+Lock/Atomic           : 1.16
 ============================
 Cycles       :        100000
-BaseLine     :      41512818
-synchronized :      43843003
-Lock         :      87430386
-Atomic       :      51892350
-synchronized/BaseLine : 1.06
-Lock/BaseLine         : 2.11
-Atomic/BaseLine       : 1.25
-synchronized/Lock     : 0.50
-synchronized/Atomic   : 0.84
-Lock/Atomic           : 1.68
+BaseLine     :       5193179
+synchronized :      82977464
+Lock         :      31370928
+Atomic       :      11210371
+synchronized/BaseLine : 15.98
+Lock/BaseLine         : 6.04
+Atomic/BaseLine       : 2.16
+synchronized/Lock     : 2.65
+synchronized/Atomic   : 7.40
+Lock/Atomic           : 2.80
 ============================
 Cycles       :        200000
-BaseLine     :      80176670
-synchronized :    5455046661
-Lock         :     177686829
-Atomic       :     101789194
-synchronized/BaseLine : 68.04
-Lock/BaseLine         : 2.22
-Atomic/BaseLine       : 1.27
-synchronized/Lock     : 30.70
-synchronized/Atomic   : 53.59
-Lock/Atomic           : 1.75
+BaseLine     :       8938838
+synchronized :     165124963
+Lock         :      78268801
+Atomic       :      13180858
+synchronized/BaseLine : 18.47
+Lock/BaseLine         : 8.76
+Atomic/BaseLine       : 1.47
+synchronized/Lock     : 2.11
+synchronized/Atomic   : 12.53
+Lock/Atomic           : 5.94
 ============================
 Cycles       :        400000
-BaseLine     :     160383513
-synchronized :     780052493
-Lock         :     362187652
-Atomic       :     202030984
-synchronized/BaseLine : 4.86
-Lock/BaseLine         : 2.26
-Atomic/BaseLine       : 1.26
-synchronized/Lock     : 2.15
-synchronized/Atomic   : 3.86
-Lock/Atomic           : 1.79
+BaseLine     :      24426392
+synchronized :     331777960
+Lock         :     115546684
+Atomic       :      29905100
+synchronized/BaseLine : 13.58
+Lock/BaseLine         : 4.73
+Atomic/BaseLine       : 1.22
+synchronized/Lock     : 2.87
+synchronized/Atomic   : 11.09
+Lock/Atomic           : 3.86
 ============================
 Cycles       :        800000
-BaseLine     :     322064955
-synchronized :     336155014
-Lock         :     704615531
-Atomic       :     393231542
-synchronized/BaseLine : 1.04
-Lock/BaseLine         : 2.19
-Atomic/BaseLine       : 1.22
-synchronized/Lock     : 0.47
-synchronized/Atomic   : 0.85
-Lock/Atomic           : 1.79
+BaseLine     :      34345855
+synchronized :     633854425
+Lock         :     245733266
+Atomic       :      87583065
+synchronized/BaseLine : 18.46
+Lock/BaseLine         : 7.15
+Atomic/BaseLine       : 2.55
+synchronized/Lock     : 2.58
+synchronized/Atomic   : 7.24
+Lock/Atomic           : 2.81
 ============================
 Cycles       :       1600000
-BaseLine     :     650004120
-synchronized :   52235762925
-Lock         :    1419602771
-Atomic       :     796950171
-synchronized/BaseLine : 80.36
-Lock/BaseLine         : 2.18
-Atomic/BaseLine       : 1.23
-synchronized/Lock     : 36.80
-synchronized/Atomic   : 65.54
-Lock/Atomic           : 1.78
+BaseLine     :      62631708
+synchronized :    1594457825
+Lock         :     654792500
+Atomic       :     138332107
+synchronized/BaseLine : 25.46
+Lock/BaseLine         : 10.45
+Atomic/BaseLine       : 2.21
+synchronized/Lock     : 2.44
+synchronized/Atomic   : 11.53
+Lock/Atomic           : 4.73
 ============================
 Cycles       :       3200000
-BaseLine     :    1285664519
-synchronized :   96336767661
-Lock         :    2846988654
-Atomic       :    1590545726
-synchronized/BaseLine : 74.93
-Lock/BaseLine         : 2.21
-Atomic/BaseLine       : 1.24
-synchronized/Lock     : 33.84
-synchronized/Atomic   : 60.57
-Lock/Atomic           : 1.79
-*///:~
+BaseLine     :     128165186
+synchronized :    3528972948
+Lock         :    1278760479
+Atomic       :     285986269
+synchronized/BaseLine : 27.53
+Lock/BaseLine         : 9.98
+Atomic/BaseLine       : 2.23
+synchronized/Lock     : 2.76
+synchronized/Atomic   : 12.34
+Lock/Atomic           : 4.47
+============================
+Cycles       :       6400000
+BaseLine     :     220485251
+synchronized :    6981991134
+Lock         :    2650398226
+Atomic       :     500422566
+synchronized/BaseLine : 31.67
+Lock/BaseLine         : 12.02
+Atomic/BaseLine       : 2.27
+synchronized/Lock     : 2.63
+synchronized/Atomic   : 13.95
+Lock/Atomic           : 5.30
+ */

@@ -173,8 +173,7 @@ class RobotPool {
     pool.add(r);
     notifyAll();
   }
-  public synchronized void
-  hire(Class<? extends Robot> robotType, Assembler d)
+  public synchronized void hire(Class<? extends Robot> robotType, Assembler d)
   throws InterruptedException {
     for(Robot r : pool)
       if(r.getClass().equals(robotType)) {

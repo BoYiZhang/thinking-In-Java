@@ -12,6 +12,7 @@ class DelayedTask implements Runnable, Delayed {
   private final long trigger;
   protected static List<DelayedTask> sequence =
     new ArrayList<DelayedTask>();
+
   public DelayedTask(int delayInMilliseconds) {
     delta = delayInMilliseconds;
     trigger = System.nanoTime() +
@@ -62,6 +63,7 @@ class DelayedTaskConsumer implements Runnable {
     try {
       while(!Thread.interrupted())
         q.take().run(); // Run task with the current thread
+        SECONDS.sleep(1000);
     } catch(InterruptedException e) {
       // Acceptable way to exit
     }
@@ -73,17 +75,63 @@ public class DelayQueueDemo {
   public static void main(String[] args) {
     Random rand = new Random(47);
     ExecutorService exec = Executors.newCachedThreadPool();
-    DelayQueue<DelayedTask> queue =
-      new DelayQueue<DelayedTask>();
+
+    DelayQueue<DelayedTask> queue =  new DelayQueue<DelayedTask>();
+
     // Fill with tasks that have random delays:
     for(int i = 0; i < 20; i++)
       queue.put(new DelayedTask(rand.nextInt(5000)));
+
+
     // Set the stopping point
     queue.add(new DelayedTask.EndSentinel(5000, exec));
+
+
     exec.execute(new DelayedTaskConsumer(queue));
   }
 } /* Output:
-[128 ] Task 11 [200 ] Task 7 [429 ] Task 5 [520 ] Task 18 [555 ] Task 1 [961 ] Task 4 [998 ] Task 16 [1207] Task 9 [1693] Task 2 [1809] Task 14 [1861] Task 3 [2278] Task 15 [3288] Task 10 [3551] Task 12 [4258] Task 0 [4258] Task 19 [4522] Task 8 [4589] Task 13 [4861] Task 17 [4868] Task 6 (0:4258) (1:555) (2:1693) (3:1861) (4:961) (5:429) (6:4868) (7:200) (8:4522) (9:1207) (10:3288) (11:128) (12:3551) (13:4589) (14:1809) (15:2278) (16:998) (17:4861) (18:520) (19:4258) (20:5000)
+[128 ] Task 11
+[200 ] Task 7
+[429 ] Task 5
+[520 ] Task 18
+[555 ] Task 1
+[961 ] Task 4
+[998 ] Task 16
+[1207] Task 9
+[1693] Task 2
+[1809] Task 14
+[1861] Task 3
+[2278] Task 15
+[3288] Task 10
+[3551] Task 12
+[4258] Task 0
+[4258] Task 19
+[4522] Task 8
+[4589] Task 13
+[4861] Task 17
+[4868] Task 6
+(0:4258)
+(1:555)
+(2:1693)
+(3:1861)
+(4:961)
+(5:429)
+(6:4868)
+(7:200)
+(8:4522)
+(9:1207)
+(10:3288)
+(11:128)
+(12:3551)
+(13:4589)
+(14:1809)
+(15:2278)
+(16:998)
+(17:4861)
+(18:520)
+(19:4258)
+(20:5000)
+
 [5000] Task 20 Calling shutdownNow()
 Finished DelayedTaskConsumer
 *///:~

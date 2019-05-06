@@ -17,7 +17,8 @@ class Horse implements Runnable {
     try {
       while(!Thread.interrupted()) {
         synchronized(this) {
-          strides += rand.nextInt(3); // Produces 0, 1 or 2
+          strides += rand.nextInt(10); // Produces 0, 1 or 2
+
         }
         barrier.await();
       }
@@ -39,11 +40,13 @@ class Horse implements Runnable {
 }
 
 public class HorseRace {
-  static final int FINISH_LINE = 75;
+  static final int FINISH_LINE = 50;
   private List<Horse> horses = new ArrayList<Horse>();
   private ExecutorService exec =
     Executors.newCachedThreadPool();
   private CyclicBarrier barrier;
+
+
   public HorseRace(int nHorses, final int pause) {
     barrier = new CyclicBarrier(nHorses, new Runnable() {
       public void run() {
@@ -72,6 +75,8 @@ public class HorseRace {
       exec.execute(horse);
     }
   }
+
+
   public static void main(String[] args) {
     int nHorses = 7;
     int pause = 200;

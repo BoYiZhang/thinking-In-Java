@@ -40,7 +40,8 @@ public class SimpleMicroBenchmark {
       (double)lockTime/(double)synchTime);
   }
 } /* Output: (75% match)
-synchronized:  244919117
-Lock:          939098964
-Lock/synchronized = 3.834
+synchronized:  291883133
+Lock:          210840651
+Lock/synchronized = 0.722Disconnected from the target VM, address: '127.0.0.1:62318', transport: 'socket'
+
 *///:~
